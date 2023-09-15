@@ -1,9 +1,12 @@
 import React from 'react';
 import ImageItem from '../ImageItem';
 import PropTypes from 'prop-types';
+import {
+  ImageGalleryStyled,
+} from './ImageGallery.styled';
 
 export default function ImageGallery({ images }) {
-  return (<ul>
+  return (<ImageGalleryStyled>
     {images.map(({
       id,
       webformatURL,
@@ -16,7 +19,7 @@ export default function ImageGallery({ images }) {
                    description={tags} />
       </li>;
     })}
-  </ul>);
+  </ImageGalleryStyled>);
 }
 
 ImageGallery.propTypes = {
