@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  ImageItemStyled, ImageModalStyled, ImageStyled,
-} from './ImageItem.styled';
+  ImageGalleryItemStyled, ImageModalStyled, ImageStyled,
+} from './ImageGalleryItem.styled';
 import Modal from '../Modal';
 
-class ImageItem extends Component {
+class ImageGalleryItem extends Component {
   static propTypes = {
     previewImageURL: PropTypes.string.isRequired,
     fullSizeImageURL: PropTypes.string.isRequired,
@@ -32,7 +32,7 @@ class ImageItem extends Component {
     } = this.props;
     const { isModalOpen } = this.state;
 
-    return (<ImageItemStyled>
+    return (<ImageGalleryItemStyled>
       <ImageStyled src={previewImageURL}
                    alt={description}
                    onClick={this.openModal} />
@@ -41,8 +41,8 @@ class ImageItem extends Component {
                           alt={description}
                           onClick={this.closeModal} />
       </Modal>}
-    </ImageItemStyled>);
+    </ImageGalleryItemStyled>);
   }
 }
 
-export default ImageItem;
+export default ImageGalleryItem;

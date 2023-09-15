@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const ImageItemStyled = styled.article`
+export const ImageGalleryItemStyled = styled.article`
   width: 100%;
 `;
 
