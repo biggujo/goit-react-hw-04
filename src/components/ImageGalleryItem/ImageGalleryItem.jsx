@@ -36,6 +36,7 @@ class ImageGalleryItem extends Component {
       <ImageStyled src={previewImageURL}
                    alt={description}
                    onClick={this.openModal} />
+
       {isModalOpen && <Modal onClose={this.closeModal}>
         <ImageModalStyled src={fullSizeImageURL}
                           alt={description}

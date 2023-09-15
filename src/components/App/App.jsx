@@ -6,6 +6,7 @@ import ImageGallery from '../ImageGallery';
 import Button from '../Button';
 import { fetchImages } from '../../services/api';
 import { Wrapper } from './App.styled';
+import GlobalStyles from '../Global/GlobalStyles';
 
 const INITIAL_PAGE = 1;
 const RESULTS_PER_PAGE = 12;
@@ -117,6 +118,7 @@ class App extends Component {
         position='top-right'
         reverseOrder={false}
       />
+      <GlobalStyles />
     </Wrapper>);
   }
 }
