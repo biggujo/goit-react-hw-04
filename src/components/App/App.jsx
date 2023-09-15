@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { BounceLoader } from 'react-spinners';
 import toast, { Toaster } from 'react-hot-toast';
 import SearchBar from '../SearchBar';
 import Loader from '../Loader';
@@ -31,10 +30,10 @@ class App extends Component {
     }
 
     if (prevState.query !== nextQuery) {
-      console.log('New query');
       this.setState({
+        imageList: [],
         page: INITIAL_PAGE,
-        isMaxPage: false,
+        isMaxPage: true,
       });
     }
 
@@ -60,9 +59,19 @@ class App extends Component {
 
       if (this.isMaxPageReached(totalHits, RESULTS_PER_PAGE)) {
         this.setState({ isMaxPage: true });
+      } else {
+        this.setState({ isMaxPage: false });
       }
 
-      this.setState({ imageList: hits });
+      this.setState((prevState) => {
+        return {
+          imageList: [
+            ...prevState.imageList,
+            ...hits,
+          ],
+        };
+      });
+
     } catch (error) {
       this.setState({ imageList: [] });
 
@@ -84,9 +93,6 @@ class App extends Component {
 
   isMaxPageReached(totalHits, perPage) {
     const { page } = this.state;
-    console.log(page);
-
-    console.log(page > Math.floor(totalHits / perPage));
 
     return page > Math.floor(totalHits / perPage);
   }
@@ -99,14 +105,12 @@ class App extends Component {
     } = this.state;
 
     return (<Wrapper>
-      {isLoading && (<Loader>
-        <BounceLoader color='#3f51b5' />
-      </Loader>)}
-
       <SearchBar onSubmit={this.handleQuerySubmit} />
       <ImageGallery images={imageList} />
 
-      {!isMaxPage &&
+      {isLoading && (<Loader />)}
+
+      {!isMaxPage && !isLoading &&
         <Button onClick={this.handlePageIncrement} text='Load more' />}
 
       <Toaster

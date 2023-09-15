@@ -9,6 +9,8 @@ export const BackdropStyled = styled.div`
   height: 100vh;
 
   background-color: rgba(0, 0, 0, 0.2);
+
+  z-index: 3;
 `;
 
 export const ModalStyled = styled.div`
@@ -24,7 +26,7 @@ export const ModalStyled = styled.div`
 
   transform: translate(-50%, -50%);
 
-  background-color: #ffffff;
+  background-color: transparent;
   border-radius: 3px;
 
   overflow: hidden;

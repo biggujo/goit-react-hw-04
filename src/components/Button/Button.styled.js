@@ -9,6 +9,8 @@ export const ButtonStyled = styled.button`
   color: #ffffff;
   text-transform: uppercase;
 
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
   background-color: #3f51b5;
   border: none;
   border-radius: 3px;

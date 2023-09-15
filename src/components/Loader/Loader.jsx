@@ -1,18 +1,9 @@
 import React from 'react';
-import { BackdropStyled, ModalStyled } from './Loader.styled';
-import PropTypes from 'prop-types';
-import { createPortal } from 'react-dom';
+import { BounceLoader } from 'react-spinners';
+import { Wrapper } from './Loader.styled';
 
-const modalRoot = document.getElementById('modal');
-
-export default function Loader({ children }) {
-  return createPortal(<BackdropStyled>
-    <ModalStyled>
-      {children}
-    </ModalStyled>
-  </BackdropStyled>, modalRoot);
+export default function Loader() {
+  return <Wrapper>
+    <BounceLoader color='#3f51b5' />
+  </Wrapper>;
 }
-
-Loader.propTypes = {
-  children: PropTypes.node.isRequired,
-};

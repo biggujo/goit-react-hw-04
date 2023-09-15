@@ -2,7 +2,7 @@ import React from 'react';
 import ImageGalleryItem from '../ImageGalleryItem';
 import PropTypes from 'prop-types';
 import {
-  ImageGalleryStyled,
+  ImageGalleryStyled, ItemStyled,
 } from './ImageGallery.styled';
 
 export default function ImageGallery({ images }) {
@@ -13,11 +13,11 @@ export default function ImageGallery({ images }) {
       largeImageURL,
       tags,
     }) => {
-      return <li key={id}>
+      return <ItemStyled key={id}>
         <ImageGalleryItem previewImageURL={webformatURL}
                           fullSizeImageURL={largeImageURL}
                           description={tags} />
-      </li>;
+      </ItemStyled>;
     })}
   </ImageGalleryStyled>);
 }
@@ -28,5 +28,5 @@ ImageGallery.propTypes = {
     webformatURL: PropTypes.string.isRequired,
     largeImageURL: PropTypes.string.isRequired,
     tags: PropTypes.string.isRequired,
-  })),
+  })).isRequired,
 };
