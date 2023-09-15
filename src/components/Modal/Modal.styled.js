@@ -25,4 +25,7 @@ export const ModalStyled = styled.div`
   transform: translate(-50%, -50%);
 
   background-color: #ffffff;
+  border-radius: 3px;
+
+  overflow: hidden;
 `;

@@ -5,6 +5,7 @@ import SearchBar from './SearchBar';
 import Loader from './Loader';
 import ImageGallery from './ImageGallery';
 import { fetchImages } from '../services/api';
+import Button from './Button';
 
 const INITIAL_PAGE = 1;
 const RESULTS_PER_PAGE = 12;
@@ -14,7 +15,7 @@ class App extends Component {
     query: '',
     imageList: [],
     page: INITIAL_PAGE,
-    perPage: RESULTS_PER_PAGE,
+    isMaxPage: true,
     isLoading: false,
   };
 
@@ -22,7 +23,6 @@ class App extends Component {
     const {
       query: nextQuery,
       page,
-      perPage,
     } = this.state;
 
     if (prevState.query === nextQuery) {
@@ -40,7 +40,7 @@ class App extends Component {
       const queryResults = await fetchImages({
         query: actualQuery,
         page,
-        perPage,
+        RESULTS_PER_PAGE,
       });
 
       if (queryResults.totalHits === 0) {
@@ -57,6 +57,12 @@ class App extends Component {
     }
   }
 
+  handlePageIncrement = () => {
+    this.setState((prevState) => {
+      return { page: prevState.page + 1 };
+    });
+  };
+
   handleQuerySubmit = async (values) => {
     this.setState({ query: `${Date.now()}/${values.query}` });
   };
@@ -65,6 +71,7 @@ class App extends Component {
     const {
       imageList,
       isLoading,
+      isMaxPage,
     } = this.state;
 
     return (<div>
@@ -74,6 +81,9 @@ class App extends Component {
 
       <SearchBar onSubmit={this.handleQuerySubmit} />
       <ImageGallery images={imageList} />
+
+      {!isMaxPage &&
+        <Button onClick={this.handlePageIncrement} text='Load more' />}
 
       <Toaster
         position='top-right'
