@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { BounceLoader } from 'react-spinners';
 import toast, { Toaster } from 'react-hot-toast';
-import SearchBar from './SearchBar';
-import Loader from './Loader';
-import ImageGallery from './ImageGallery';
-import { fetchImages } from '../services/api';
-import Button from './Button';
+import SearchBar from '../SearchBar';
+import Loader from '../Loader';
+import ImageGallery from '../ImageGallery';
+import Button from '../Button';
+import { fetchImages } from '../../services/api';
+import { Wrapper } from './App.styled';
 
 const INITIAL_PAGE = 1;
 const RESULTS_PER_PAGE = 12;
@@ -22,32 +23,46 @@ class App extends Component {
   async componentDidUpdate(prevProps, prevState) {
     const {
       query: nextQuery,
-      page,
+      page: nextPage,
     } = this.state;
 
-    if (prevState.query === nextQuery) {
+    if (prevState.query === nextQuery && prevState.page === nextPage) {
       return;
+    }
+
+    if (prevState.query !== nextQuery) {
+      console.log('New query');
+      this.setState({
+        page: INITIAL_PAGE,
+        isMaxPage: false,
+      });
     }
 
     const actualQuery = nextQuery.split('/').at(-1);
 
     this.setState({
-      page: INITIAL_PAGE,
       isLoading: true,
     });
 
     try {
-      const queryResults = await fetchImages({
+      const {
+        totalHits,
+        hits,
+      } = await fetchImages({
         query: actualQuery,
-        page,
-        RESULTS_PER_PAGE,
+        page: nextPage,
+        perPage: RESULTS_PER_PAGE,
       });
 
-      if (queryResults.totalHits === 0) {
+      if (totalHits === 0) {
         throw new Error('No images has been found.');
       }
 
-      this.setState({ imageList: queryResults.hits });
+      if (this.isMaxPageReached(totalHits, RESULTS_PER_PAGE)) {
+        this.setState({ isMaxPage: true });
+      }
+
+      this.setState({ imageList: hits });
     } catch (error) {
       this.setState({ imageList: [] });
 
@@ -67,6 +82,15 @@ class App extends Component {
     this.setState({ query: `${Date.now()}/${values.query}` });
   };
 
+  isMaxPageReached(totalHits, perPage) {
+    const { page } = this.state;
+    console.log(page);
+
+    console.log(page > Math.floor(totalHits / perPage));
+
+    return page > Math.floor(totalHits / perPage);
+  }
+
   render() {
     const {
       imageList,
@@ -74,7 +98,7 @@ class App extends Component {
       isMaxPage,
     } = this.state;
 
-    return (<div>
+    return (<Wrapper>
       {isLoading && (<Loader>
         <BounceLoader color='#3f51b5' />
       </Loader>)}
@@ -89,7 +113,7 @@ class App extends Component {
         position='top-right'
         reverseOrder={false}
       />
-    </div>);
+    </Wrapper>);
   }
 }
 
