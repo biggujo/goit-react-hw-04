@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BounceLoader } from 'react-spinners';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import SearchBar from './SearchBar';
 import Loader from './Loader';
 import ImageGallery from './ImageGallery';
@@ -43,9 +43,15 @@ class App extends Component {
         perPage,
       });
 
+      if (queryResults.totalHits === 0) {
+        throw new Error('No images has been found.');
+      }
+
       this.setState({ imageList: queryResults.hits });
     } catch (error) {
-      toast(error.message);
+      this.setState({ imageList: [] });
+
+      toast.error(error.message);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -65,8 +71,14 @@ class App extends Component {
       {isLoading && (<Loader>
         <BounceLoader color='#3f51b5' />
       </Loader>)}
+
       <SearchBar onSubmit={this.handleQuerySubmit} />
       <ImageGallery images={imageList} />
+
+      <Toaster
+        position='top-right'
+        reverseOrder={false}
+      />
     </div>);
   }
 }
