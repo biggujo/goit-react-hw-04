@@ -38,7 +38,7 @@ export const IconButtonStyled = styled.button`
   border: none;
   background-color: transparent;
 
-  &
+  cursor: pointer;
 `;
 
 export const IconStyled = styled(BiSearch)`
