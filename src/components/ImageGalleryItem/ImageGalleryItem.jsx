@@ -1,49 +1,39 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ImageGalleryItemStyled, ImageModalStyled, ImageStyled,
 } from './ImageGalleryItem.styled';
 import Modal from '../Modal';
 
-class ImageGalleryItem extends Component {
-  static propTypes = {
-    previewImageURL: PropTypes.string.isRequired,
-    fullSizeImageURL: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+export default function ImageGalleryItem({
+  previewImageURL,
+  fullSizeImageURL,
+  description,
+}) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
   };
 
-  state = {
-    isModalOpen: false,
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
-  openModal = () => {
-    this.setState({ isModalOpen: true });
-  };
-
-  closeModal = () => {
-    this.setState({ isModalOpen: false });
-  };
-
-  render() {
-    const {
-      previewImageURL,
-      fullSizeImageURL,
-      description,
-    } = this.props;
-    const { isModalOpen } = this.state;
-
-    return (<ImageGalleryItemStyled>
-      <ImageStyled src={previewImageURL}
-                   alt={description}
-                   onClick={this.openModal} />
-
-      {isModalOpen && <Modal onClose={this.closeModal}>
-        <ImageModalStyled src={fullSizeImageURL}
-                          alt={description}
-                          onClick={this.closeModal} />
-      </Modal>}
-    </ImageGalleryItemStyled>);
-  }
+  return (<ImageGalleryItemStyled>
+    <ImageStyled src={previewImageURL}
+                 alt={description}
+                 onClick={openModal} />
+    {isModalOpen && <Modal onClose={closeModal}>
+      <ImageModalStyled src={fullSizeImageURL}
+                        alt={description}
+                        onClick={closeModal} />
+    </Modal>}
+  </ImageGalleryItemStyled>);
 }
 
-export default ImageGalleryItem;
+ImageGalleryItem.propTypes = {
+  previewImageURL: PropTypes.string.isRequired,
+  fullSizeImageURL: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+};

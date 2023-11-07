@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import SearchBar from '../SearchBar';
 import Loader from '../Loader';
@@ -11,116 +11,83 @@ import GlobalStyles from '../Global/GlobalStyles';
 const INITIAL_PAGE = 1;
 const RESULTS_PER_PAGE = 12;
 
-class App extends Component {
-  state = {
-    query: '',
-    imageList: [],
-    page: INITIAL_PAGE,
-    isMaxPage: true,
-    isLoading: false,
-  };
+export default function App() {
+  const [query, setQuery] = useState('');
+  const [imageList, setImageList] = useState([]);
+  const [page, setPage] = useState(INITIAL_PAGE);
+  const [isMaxPage, setIsMaxPage] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  async componentDidUpdate(prevProps, prevState) {
-    const {
-      query: nextQuery,
-      page: nextPage,
-    } = this.state;
+  useEffect(() => {
+    setImageList([]);
+    setPage(INITIAL_PAGE);
+    setIsMaxPage(true);
+  }, [query]);
 
-    if (prevState.query === nextQuery && prevState.page === nextPage) {
-      return;
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      const actualQuery = query.split('/').at(-1);
 
-    if (prevState.query !== nextQuery) {
-      this.setState({
-        imageList: [],
-        page: INITIAL_PAGE,
-        isMaxPage: true,
-      });
-    }
+      setIsLoading(true);
 
-    const actualQuery = nextQuery.split('/').at(-1);
+      try {
+        const {
+          totalHits,
+          hits,
+        } = await fetchImages({
+          query: actualQuery,
+          page: page,
+          perPage: RESULTS_PER_PAGE,
+        });
 
-    this.setState({
-      isLoading: true,
-    });
+        if (totalHits === 0) {
+          throw new Error('No images has been found.');
+        }
 
-    try {
-      const {
-        totalHits,
-        hits,
-      } = await fetchImages({
-        query: actualQuery,
-        page: nextPage,
-        perPage: RESULTS_PER_PAGE,
-      });
+        if (isMaxPageReached(totalHits, RESULTS_PER_PAGE)) {
+          setIsMaxPage(true);
+        } else {
+          setIsMaxPage(false);
+        }
 
-      if (totalHits === 0) {
-        throw new Error('No images has been found.');
+        setImageList(prevState => [
+          ...prevState,
+          ...hits,
+        ]);
+      } catch (error) {
+        setImageList([]);
+
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
       }
+    };
 
-      if (this.isMaxPageReached(totalHits, RESULTS_PER_PAGE)) {
-        this.setState({ isMaxPage: true });
-      } else {
-        this.setState({ isMaxPage: false });
-      }
+    fetchData();
+  }, [page, query]);
 
-      this.setState((prevState) => {
-        return {
-          imageList: [
-            ...prevState.imageList,
-            ...hits,
-          ],
-        };
-      });
-
-    } catch (error) {
-      this.setState({ imageList: [] });
-
-      toast.error(error.message);
-    } finally {
-      this.setState({ isLoading: false });
-    }
-  }
-
-  handlePageIncrement = () => {
-    this.setState((prevState) => {
-      return { page: prevState.page + 1 };
-    });
+  const handlePageIncrement = () => {
+    setPage(prevState => prevState + 1);
   };
 
-  handleQuerySubmit = async (values) => {
-    this.setState({ query: `${Date.now()}/${values.query}` });
+  const handleQuerySubmit = async (values) => {
+    setQuery(`${Date.now()}/${values.query}`);
   };
 
-  isMaxPageReached(totalHits, perPage) {
-    const { page } = this.state;
-
+  const isMaxPageReached = (totalHits, perPage) => {
     return page > Math.floor(totalHits / perPage);
-  }
+  };
 
-  render() {
-    const {
-      imageList,
-      isLoading,
-      isMaxPage,
-    } = this.state;
-
-    return (<Wrapper>
-      <SearchBar onSubmit={this.handleQuerySubmit} />
-      <ImageGallery images={imageList} />
-
-      {isLoading && (<Loader />)}
-
-      {!isMaxPage && !isLoading &&
-        <Button onClick={this.handlePageIncrement} text='Load more' />}
-
-      <Toaster
-        position='top-right'
-        reverseOrder={false}
-      />
-      <GlobalStyles />
-    </Wrapper>);
-  }
+  return (<Wrapper>
+    <SearchBar onSubmit={handleQuerySubmit} />
+    <ImageGallery images={imageList} />
+    {isLoading && (<Loader />)}
+    {!isMaxPage && !isLoading &&
+      <Button onClick={handlePageIncrement} text='Load more' />}
+    <Toaster
+      position='top-right'
+      reverseOrder={false}
+    />
+    <GlobalStyles />
+  </Wrapper>);
 }
-
-export default App;
