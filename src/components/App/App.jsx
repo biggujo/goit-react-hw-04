@@ -25,6 +25,14 @@ export default function App() {
   }, [query]);
 
   useEffect(() => {
+    if (query === "") {
+      return;
+    }
+
+    const isMaxPageReached = (totalHits, perPage) => {
+      return page > Math.floor(totalHits / perPage);
+    };
+
     const fetchData = async () => {
       const actualQuery = query.split('/').at(-1);
 
@@ -72,10 +80,6 @@ export default function App() {
 
   const handleQuerySubmit = async (values) => {
     setQuery(`${Date.now()}/${values.query}`);
-  };
-
-  const isMaxPageReached = (totalHits, perPage) => {
-    return page > Math.floor(totalHits / perPage);
   };
 
   return (<Wrapper>

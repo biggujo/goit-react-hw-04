@@ -15,18 +15,18 @@ export default function Modal({
     }
   };
 
-  const handleEscapePress = (event) => {
-    if (event.code === 'Escape') {
-      onClose();
-    }
-  };
-
   useEffect(() => {
+    const handleEscapePress = (event) => {
+      if (event.code === 'Escape') {
+        onClose();
+      }
+    };
+
     window.addEventListener('keydown', handleEscapePress);
     return () => {
       window.removeEventListener('keydown', handleEscapePress);
     };
-  }, []);
+  }, [onClose]);
 
   return createPortal(<BackdropStyled onClick={handleBackdropClick}>
     <ModalStyled>
