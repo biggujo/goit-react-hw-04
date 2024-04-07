@@ -1,6 +1,4 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import { ImageModalStyled } from './ImageModal.styled.js';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#modal');

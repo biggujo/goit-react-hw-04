@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import { useEffect, useState } from 'react';
 import SearchBar from '../SearchBar';
 import Loader from '../Loader';
 import ImageGallery from '../ImageGallery';
@@ -8,6 +7,7 @@ import { fetchImages } from '../../services/api';
 import { Wrapper } from './App.styled';
 import GlobalStyles from '../Global/GlobalStyles';
 import ErrorMessage from '../ErrorMessage/index.js';
+import toast, { Toaster } from 'react-hot-toast';
 
 const INITIAL_PAGE = 1;
 const RESULTS_PER_PAGE = 12;
@@ -52,7 +52,9 @@ export default function App() {
         });
 
         if (total === 0) {
-          throw new Error('No images has been found.');
+          toast.error('No images has been found.');
+          setIsLoading(false);
+          return;
         }
 
         if (isMaxPageReached(total, RESULTS_PER_PAGE)) {
@@ -66,7 +68,6 @@ export default function App() {
           ...results,
         ]);
       } catch (error) {
-        console.log(error);
         setImageList([]);
 
         setError(error.message);
@@ -96,6 +97,10 @@ export default function App() {
     {isLoading && (<Loader />)}
     {!isMaxPage && !isLoading &&
       <LoadMoreBtn onClick={handlePageIncrement} text='Load more' />}
+    <Toaster
+      position='top-right'
+      reverseOrder={false}
+    />
     <GlobalStyles />
   </Wrapper>);
 }

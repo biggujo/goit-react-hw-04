@@ -1,4 +1,3 @@
-import React from 'react';
 import ImageCard from '../ImageCard';
 import PropTypes from 'prop-types';
 import {
