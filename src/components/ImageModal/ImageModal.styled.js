@@ -13,7 +13,7 @@ export const BackdropStyled = styled.div`
   z-index: 3;
 `;
 
-export const ModalStyled = styled.div`
+export const ImageModalStyled = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;

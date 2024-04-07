@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   ImageGalleryItemStyled, ImageModalStyled, ImageStyled,
 } from './ImageGalleryItem.styled';
-import Modal from '../Modal';
+import ImageModal from '../ImageModal/index.js';
 
 export default function ImageGalleryItem({
   previewImageURL,
@@ -24,11 +24,14 @@ export default function ImageGalleryItem({
     <ImageStyled src={previewImageURL}
                  alt={description}
                  onClick={openModal} />
-    {isModalOpen && <Modal onClose={closeModal}>
+    {isModalOpen && <ImageModal isOpen={isModalOpen}
+                                onRequestClose={() => setIsModalOpen(false)}
+                                contentLabel={description}
+    >
       <ImageModalStyled src={fullSizeImageURL}
                         alt={description}
                         onClick={closeModal} />
-    </Modal>}
+    </ImageModal>}
   </ImageGalleryItemStyled>);
 }
 
