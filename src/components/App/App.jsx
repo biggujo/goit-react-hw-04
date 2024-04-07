@@ -84,7 +84,7 @@ export default function App() {
 
   return (<Wrapper>
     <SearchBar onSubmit={handleQuerySubmit} />
-    <ImageGallery images={imageList} />
+    {imageList && imageList.length !== 0 && <ImageGallery images={imageList} />}
     {isLoading && (<Loader />)}
     {!isMaxPage && !isLoading &&
       <Button onClick={handlePageIncrement} text='Load more' />}
