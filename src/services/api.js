@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://pixabay.com/api';
+axios.defaults.baseURL = 'https://api.unsplash.com';
 
-const API_KEY = '38308184-41247c978e0d2604524b8abfa';
+const API_KEY = 'vffV2E50mdrR3FLyJgbiqJm_dL8Lms3rg3giE2kAIpE';
 
 export const fetchImages = async ({
   query,
@@ -10,15 +10,14 @@ export const fetchImages = async ({
   perPage,
 }) => {
   const urlParameters = new URLSearchParams({
-    key: API_KEY,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    q: query,
+    client_id: API_KEY,
+    query,
     page,
     per_page: perPage,
+    orientation: 'landscape',
   });
 
-  const response = await axios.get(`/?${urlParameters}`);
+  const response = await axios.get(`/search/photos?${urlParameters}`);
 
   return response.data;
 };

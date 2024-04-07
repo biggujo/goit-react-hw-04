@@ -38,5 +38,5 @@ export default function ImageCard({
 ImageCard.propTypes = {
   previewImageURL: PropTypes.string.isRequired,
   fullSizeImageURL: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
 };

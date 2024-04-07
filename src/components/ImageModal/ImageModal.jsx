@@ -49,6 +49,6 @@ export default function ImageModal({
 ImageModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onRequestClose: PropTypes.func.isRequired,
-  contentLabel: PropTypes.func.isRequired,
+  contentLabel: PropTypes.string,
   children: PropTypes.node.isRequired,
 };

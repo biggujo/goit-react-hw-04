@@ -43,19 +43,19 @@ export default function App() {
 
       try {
         const {
-          totalHits,
-          hits,
+          total,
+          results,
         } = await fetchImages({
           query: actualQuery,
           page: page,
           perPage: RESULTS_PER_PAGE,
         });
 
-        if (totalHits === 0) {
+        if (total === 0) {
           throw new Error('No images has been found.');
         }
 
-        if (isMaxPageReached(totalHits, RESULTS_PER_PAGE)) {
+        if (isMaxPageReached(total, RESULTS_PER_PAGE)) {
           setIsMaxPage(true);
         } else {
           setIsMaxPage(false);
@@ -63,7 +63,7 @@ export default function App() {
 
         setImageList(prevState => [
           ...prevState,
-          ...hits,
+          ...results,
         ]);
       } catch (error) {
         console.log(error);
@@ -96,10 +96,6 @@ export default function App() {
     {isLoading && (<Loader />)}
     {!isMaxPage && !isLoading &&
       <LoadMoreBtn onClick={handlePageIncrement} text='Load more' />}
-    <Toaster
-      position='top-right'
-      reverseOrder={false}
-    />
     <GlobalStyles />
   </Wrapper>);
 }

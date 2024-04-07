@@ -9,14 +9,16 @@ export default function ImageGallery({ images }) {
   return (<ImageGalleryStyled>
     {images.map(({
       id,
-      webformatURL,
-      largeImageURL,
-      tags,
+      urls: {
+        small,
+        regular,
+      },
+      description,
     }) => {
       return <ItemStyled key={id}>
-        <ImageCard previewImageURL={webformatURL}
-                   fullSizeImageURL={largeImageURL}
-                   description={tags} />
+        <ImageCard previewImageURL={small}
+                   fullSizeImageURL={regular}
+                   description={description} />
       </ItemStyled>;
     })}
   </ImageGalleryStyled>);
@@ -24,9 +26,11 @@ export default function ImageGallery({ images }) {
 
 ImageGallery.propTypes = {
   images: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    webformatURL: PropTypes.string.isRequired,
-    largeImageURL: PropTypes.string.isRequired,
-    tags: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    urls: PropTypes.shape({
+      small: PropTypes.string.isRequired,
+      regular: PropTypes.string.isRequired,
+    }),
+    description: PropTypes.string,
   })).isRequired,
 };
