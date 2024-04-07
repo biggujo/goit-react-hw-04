@@ -7,6 +7,7 @@ import LoadMoreBtn from '../LoadMoreBtn';
 import { fetchImages } from '../../services/api';
 import { Wrapper } from './App.styled';
 import GlobalStyles from '../Global/GlobalStyles';
+import ErrorMessage from '../ErrorMessage/index.js';
 
 const INITIAL_PAGE = 1;
 const RESULTS_PER_PAGE = 12;
@@ -17,6 +18,7 @@ export default function App() {
   const [page, setPage] = useState(INITIAL_PAGE);
   const [isMaxPage, setIsMaxPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setImageList([]);
@@ -25,59 +27,59 @@ export default function App() {
   }, [query]);
 
   useEffect(() => {
-      if (query === '') {
-        return;
-      }
+    if (query === '') {
+      return;
+    }
 
-      const isMaxPageReached = (totalHits, perPage) => {
-        return page > Math.floor(totalHits / perPage);
-      };
+    const isMaxPageReached = (totalHits, perPage) => {
+      return page > Math.floor(totalHits / perPage);
+    };
 
-      const fetchData = async () => {
-        const actualQuery = query.split('/').at(-1);
+    const fetchData = async () => {
+      const actualQuery = query.split('/').at(-1);
 
-        setIsLoading(true);
+      setIsLoading(true);
+      setError(null);
 
-        try {
-          const {
-            totalHits,
-            hits,
-          } = await fetchImages({
-            query: actualQuery,
-            page: page,
-            perPage: RESULTS_PER_PAGE,
-          });
+      try {
+        const {
+          totalHits,
+          hits,
+        } = await fetchImages({
+          query: actualQuery,
+          page: page,
+          perPage: RESULTS_PER_PAGE,
+        });
 
-          if (totalHits === 0) {
-            throw new Error('No images has been found.');
-          }
-
-          if (isMaxPageReached(totalHits, RESULTS_PER_PAGE)) {
-            setIsMaxPage(true);
-          } else {
-            setIsMaxPage(false);
-          }
-
-          setImageList(prevState => [
-            ...prevState,
-            ...hits,
-          ]);
-        } catch (error) {
-          setImageList([]);
-
-          toast.error(error.message);
-        } finally {
-          setIsLoading(false);
+        if (totalHits === 0) {
+          throw new Error('No images has been found.');
         }
-      };
 
-      fetchData();
-    },
-    [
-      page,
-      query,
-    ],
-  );
+        if (isMaxPageReached(totalHits, RESULTS_PER_PAGE)) {
+          setIsMaxPage(true);
+        } else {
+          setIsMaxPage(false);
+        }
+
+        setImageList(prevState => [
+          ...prevState,
+          ...hits,
+        ]);
+      } catch (error) {
+        console.log(error);
+        setImageList([]);
+
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [
+    page,
+    query,
+  ]);
 
   const handlePageIncrement = () => {
     setPage(prevState => prevState + 1);
@@ -89,6 +91,7 @@ export default function App() {
 
   return (<Wrapper>
     <SearchBar onSubmit={handleQuerySubmit} />
+    {error && <ErrorMessage message={error}></ErrorMessage>}
     {imageList && imageList.length !== 0 && <ImageGallery images={imageList} />}
     {isLoading && (<Loader />)}
     {!isMaxPage && !isLoading &&
