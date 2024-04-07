@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageGalleryItem from '../ImageGalleryItem';
+import ImageCard from '../ImageCard';
 import PropTypes from 'prop-types';
 import {
   ImageGalleryStyled, ItemStyled,
@@ -14,9 +14,9 @@ export default function ImageGallery({ images }) {
       tags,
     }) => {
       return <ItemStyled key={id}>
-        <ImageGalleryItem previewImageURL={webformatURL}
-                          fullSizeImageURL={largeImageURL}
-                          description={tags} />
+        <ImageCard previewImageURL={webformatURL}
+                   fullSizeImageURL={largeImageURL}
+                   description={tags} />
       </ItemStyled>;
     })}
   </ImageGalleryStyled>);

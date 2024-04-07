@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const ImageGalleryItemStyled = styled.article`
+export const ImageCardStyled = styled.article`
   display: flex;
   justify-content: center;
   width: 100%;

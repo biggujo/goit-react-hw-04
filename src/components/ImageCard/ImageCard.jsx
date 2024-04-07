@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  ImageGalleryItemStyled, ImageModalStyled, ImageStyled,
-} from './ImageGalleryItem.styled';
+  ImageCardStyled, ImageModalStyled, ImageStyled,
+} from './ImageCard.styled.js';
 import ImageModal from '../ImageModal/index.js';
 
-export default function ImageGalleryItem({
+export default function ImageCard({
   previewImageURL,
   fullSizeImageURL,
   description,
@@ -20,7 +20,7 @@ export default function ImageGalleryItem({
     setIsModalOpen(false);
   };
 
-  return (<ImageGalleryItemStyled>
+  return (<ImageCardStyled>
     <ImageStyled src={previewImageURL}
                  alt={description}
                  onClick={openModal} />
@@ -32,10 +32,10 @@ export default function ImageGalleryItem({
                         alt={description}
                         onClick={closeModal} />
     </ImageModal>}
-  </ImageGalleryItemStyled>);
+  </ImageCardStyled>);
 }
 
-ImageGalleryItem.propTypes = {
+ImageCard.propTypes = {
   previewImageURL: PropTypes.string.isRequired,
   fullSizeImageURL: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,

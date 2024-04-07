@@ -3,7 +3,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import SearchBar from '../SearchBar';
 import Loader from '../Loader';
 import ImageGallery from '../ImageGallery';
-import Button from '../Button';
+import LoadMoreBtn from '../LoadMoreBtn';
 import { fetchImages } from '../../services/api';
 import { Wrapper } from './App.styled';
 import GlobalStyles from '../Global/GlobalStyles';
@@ -25,54 +25,59 @@ export default function App() {
   }, [query]);
 
   useEffect(() => {
-    if (query === "") {
-      return;
-    }
-
-    const isMaxPageReached = (totalHits, perPage) => {
-      return page > Math.floor(totalHits / perPage);
-    };
-
-    const fetchData = async () => {
-      const actualQuery = query.split('/').at(-1);
-
-      setIsLoading(true);
-
-      try {
-        const {
-          totalHits,
-          hits,
-        } = await fetchImages({
-          query: actualQuery,
-          page: page,
-          perPage: RESULTS_PER_PAGE,
-        });
-
-        if (totalHits === 0) {
-          throw new Error('No images has been found.');
-        }
-
-        if (isMaxPageReached(totalHits, RESULTS_PER_PAGE)) {
-          setIsMaxPage(true);
-        } else {
-          setIsMaxPage(false);
-        }
-
-        setImageList(prevState => [
-          ...prevState,
-          ...hits,
-        ]);
-      } catch (error) {
-        setImageList([]);
-
-        toast.error(error.message);
-      } finally {
-        setIsLoading(false);
+      if (query === '') {
+        return;
       }
-    };
 
-    fetchData();
-  }, [page, query]);
+      const isMaxPageReached = (totalHits, perPage) => {
+        return page > Math.floor(totalHits / perPage);
+      };
+
+      const fetchData = async () => {
+        const actualQuery = query.split('/').at(-1);
+
+        setIsLoading(true);
+
+        try {
+          const {
+            totalHits,
+            hits,
+          } = await fetchImages({
+            query: actualQuery,
+            page: page,
+            perPage: RESULTS_PER_PAGE,
+          });
+
+          if (totalHits === 0) {
+            throw new Error('No images has been found.');
+          }
+
+          if (isMaxPageReached(totalHits, RESULTS_PER_PAGE)) {
+            setIsMaxPage(true);
+          } else {
+            setIsMaxPage(false);
+          }
+
+          setImageList(prevState => [
+            ...prevState,
+            ...hits,
+          ]);
+        } catch (error) {
+          setImageList([]);
+
+          toast.error(error.message);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchData();
+    },
+    [
+      page,
+      query,
+    ],
+  );
 
   const handlePageIncrement = () => {
     setPage(prevState => prevState + 1);
@@ -87,7 +92,7 @@ export default function App() {
     {imageList && imageList.length !== 0 && <ImageGallery images={imageList} />}
     {isLoading && (<Loader />)}
     {!isMaxPage && !isLoading &&
-      <Button onClick={handlePageIncrement} text='Load more' />}
+      <LoadMoreBtn onClick={handlePageIncrement} text='Load more' />}
     <Toaster
       position='top-right'
       reverseOrder={false}
