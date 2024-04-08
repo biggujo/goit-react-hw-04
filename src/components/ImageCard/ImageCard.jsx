@@ -1,37 +1,30 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  ImageCardStyled, ImageModalStyled, ImageStyled,
+  ImageCardStyled, ImageStyled,
 } from './ImageCard.styled.js';
-import ImageModal from '../ImageModal/index.js';
+import { useModalContext } from '../../providers/ModalProvider.jsx';
 
 export default function ImageCard({
   previewImageURL,
   fullSizeImageURL,
   description,
 }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    setIsModalOpen,
+    setModalImageSrc,
+    setModalImageAlt,
+  } = useModalContext();
 
-  const openModal = () => {
+  const handleImageClick = () => {
+    setModalImageSrc(fullSizeImageURL);
+    setModalImageAlt(description);
     setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
   };
 
   return (<ImageCardStyled>
     <ImageStyled src={previewImageURL}
                  alt={description}
-                 onClick={openModal} />
-    {isModalOpen && <ImageModal isOpen={isModalOpen}
-                                onRequestClose={() => setIsModalOpen(false)}
-                                contentLabel={description}
-    >
-      <ImageModalStyled src={fullSizeImageURL}
-                        alt={description}
-                        onClick={closeModal} />
-    </ImageModal>}
+                 onClick={handleImageClick} />
   </ImageCardStyled>);
 }
 

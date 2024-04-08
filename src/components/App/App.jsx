@@ -8,6 +8,8 @@ import { Wrapper } from './App.styled';
 import GlobalStyles from '../Global/GlobalStyles';
 import ErrorMessage from '../ErrorMessage/index.js';
 import toast, { Toaster } from 'react-hot-toast';
+import ImageModal from '../ImageModal/index.js';
+import { useModalContext } from '../../providers/ModalProvider.jsx';
 
 const INITIAL_PAGE = 1;
 const RESULTS_PER_PAGE = 12;
@@ -19,6 +21,12 @@ export default function App() {
   const [isMaxPage, setIsMaxPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const {
+    isModalOpen,
+    setIsModalOpen,
+    modalImageSrc,
+    modalImageAlt,
+  } = useModalContext();
 
   useEffect(() => {
     setImageList([]);
@@ -87,7 +95,7 @@ export default function App() {
   };
 
   const handleQuerySubmit = async (values) => {
-    setQuery(`${Date.now()}/${values.query}`);
+    setQuery(values.query);
   };
 
   return (<Wrapper>
@@ -97,6 +105,12 @@ export default function App() {
     {isLoading && (<Loader />)}
     {!isMaxPage && !isLoading &&
       <LoadMoreBtn onClick={handlePageIncrement} text='Load more' />}
+    {isModalOpen && <ImageModal isOpen={isModalOpen}
+                                src={modalImageSrc}
+                                alt={modalImageAlt}
+                                onRequestClose={() => {
+                                  setIsModalOpen(false);
+                                }} />}
     <Toaster
       position='top-right'
       reverseOrder={false}

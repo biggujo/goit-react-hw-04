@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
+import { ImageModalStyled } from '../ImageCard/ImageCard.styled.js';
 
 Modal.setAppElement('#modal');
 
@@ -27,26 +28,22 @@ const customStyles = {
 export default function ImageModal({
   isOpen,
   onRequestClose,
-  contentLabel,
-  children,
+  src,
+  alt,
 }) {
-  const handleAfterOpen = () => {
-
-  };
-
   return <Modal isOpen={isOpen}
-                onAfterOpen={handleAfterOpen}
                 onRequestClose={onRequestClose}
-                contentLabel={contentLabel}
                 style={customStyles}
   >
-    {children}
+    <ImageModalStyled src={src}
+                      alt={alt}
+                      onClick={onRequestClose} />
   </Modal>;
 }
 
 ImageModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onRequestClose: PropTypes.func.isRequired,
-  contentLabel: PropTypes.string,
-  children: PropTypes.node.isRequired,
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
 };
